@@ -5,6 +5,7 @@ from app.auth import hash_password
 from app.database import SessionLocal
 from app.models.grind_pass import GrindPass
 from app.models.mill import Mill
+from app.models.mill_handover import MillHandover
 from app.models.user import User
 from app.models.viscosity_sample import ViscositySample
 from app.models.workshop import Workshop
@@ -105,6 +106,42 @@ def seed() -> None:
                         duration_min=Decimal("60.00"),
                         media_type="1.0mm 玻璃珠",
                         operator_name="李工",
+                    ),
+                    MillHandover(
+                        mill_id=m1.id,
+                        shift_date=now.date(),
+                        slot="morning",
+                        from_operator="张研磨",
+                        to_operator="王班",
+                        mill_status_snapshot=m1.status,
+                        note="酞菁蓝第二遍进行中，粘度已合格",
+                    ),
+                    MillHandover(
+                        mill_id=m1.id,
+                        shift_date=(now - timedelta(days=1)).date(),
+                        slot="night",
+                        from_operator="王班",
+                        to_operator="张研磨",
+                        mill_status_snapshot=m1.status,
+                        note="夜间降温，料温 28.5℃",
+                    ),
+                    MillHandover(
+                        mill_id=m2.id,
+                        shift_date=now.date(),
+                        slot="morning",
+                        from_operator="李工",
+                        to_operator="赵师傅",
+                        mill_status_snapshot=m2.status,
+                        note="炭黑批次已结束，机台待料待机",
+                    ),
+                    MillHandover(
+                        mill_id=m3.id,
+                        shift_date=(now - timedelta(days=1)).date(),
+                        slot="afternoon",
+                        from_operator="赵师傅",
+                        to_operator="孙工",
+                        mill_status_snapshot=m3.status,
+                        note="专色红转产前需彻底清洗管路",
                     ),
                 ]
             )

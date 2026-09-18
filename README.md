@@ -1,7 +1,7 @@
 # InkMill-01 · 油墨研磨台账
 
-面向印刷油墨研磨车间的**研磨机状态、粘度取样与研磨遍次**台账系统。  
-**不是**库存、电商或 CMS 场景。
+面向印刷油墨研磨车间的**研磨机状态、粘度取样、研磨遍次与机台交接班**台账系统。  
+**不是**库存、电商、CMS 或人事排班场景。
 
 ## 技术栈
 
@@ -34,7 +34,17 @@ MySQL 连接：`inkmill` / `inkmill` / `inkmill`（库名/用户/密码）
 2. **Mill**：`workshopId`, `millCode`（同车间唯一）, `pigmentBase`, `bowlLiters`, `status`（`grinding` \| `idle` \| `wash`）
 3. **ViscositySample**：`millId`, `sampledAt`, `viscosityPaS`（须 &gt; 0，否则 HTTP 400）, `tempC`, `notes`
 4. **GrindPass**：`millId`, `startedAt`, `passNo`（≥ 1）, `durationMin`（&gt; 0）, `mediaType`, `operatorName`
-5. **Dashboard**：`workshopTotal`, `grindingMillCount`, `samplesLast24h`, `passesLast7d`
+5. **MillHandover**：`millId`, `shiftDate`（YYYY-MM-DD）, `slot`（`morning` \| `afternoon` \| `night`）, `fromOperator`, `toOperator`, `millStatusSnapshot`（创建/更新时自动取机台当前 `status`，只读快照）, `note`；同机台 + 同日期 + 同班次唯一
+6. **Dashboard**：`workshopTotal`, `grindingMillCount`, `samplesLast24h`, `passesLast7d`
+
+### 交接班 API
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | `/api/mill-handovers?millId=&shiftDate=YYYY-MM-DD` | 列表，可按机台、日期筛选（均可省略） |
+| POST | `/api/mill-handovers` | 新建，校验机台存在并写入当前状态快照；重复返回 400 |
+| PUT | `/api/mill-handovers/{id}` | 编辑，快照刷新为机台当前状态 |
+| DELETE | `/api/mill-handovers/{id}` | 删除 |
 
 ## 快速启动（Docker）
 

@@ -2,6 +2,7 @@ from decimal import Decimal
 
 from app.models.grind_pass import GrindPass
 from app.models.mill import Mill
+from app.models.mill_handover import MillHandover
 from app.models.user import User
 from app.models.viscosity_sample import ViscositySample
 from app.models.workshop import Workshop
@@ -63,4 +64,18 @@ def grind_pass_json(row: GrindPass) -> dict:
         "durationMin": _num(row.duration_min) or 0,
         "mediaType": row.media_type,
         "operatorName": row.operator_name,
+    }
+
+
+def mill_handover_json(row: MillHandover) -> dict:
+    return {
+        "id": row.id,
+        "millId": row.mill_id,
+        "shiftDate": row.shift_date.isoformat(),
+        "slot": row.slot,
+        "fromOperator": row.from_operator,
+        "toOperator": row.to_operator,
+        "millStatusSnapshot": row.mill_status_snapshot,
+        "note": row.note,
+        "createdAt": dt_to_json(row.created_at),
     }
