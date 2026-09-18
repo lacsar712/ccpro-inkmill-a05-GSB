@@ -5,6 +5,7 @@ from app.auth import hash_password
 from app.database import SessionLocal
 from app.models.grind_pass import GrindPass
 from app.models.mill import Mill
+from app.models.mill_handover import MillHandover
 from app.models.user import User
 from app.models.viscosity_sample import ViscositySample
 from app.models.workshop import Workshop
@@ -105,6 +106,42 @@ def seed() -> None:
                         duration_min=Decimal("60.00"),
                         media_type="1.0mm 玻璃珠",
                         operator_name="李工",
+                    ),
+                    MillHandover(
+                        mill_id=m1.id,
+                        shift_date=now.date(),
+                        slot="morning",
+                        from_operator="张研磨",
+                        to_operator="李工",
+                        mill_status_snapshot=m1.status,
+                        note="蓝墨第二批研磨中，剩约 1 遍",
+                    ),
+                    MillHandover(
+                        mill_id=m1.id,
+                        shift_date=now.date(),
+                        slot="afternoon",
+                        from_operator="李工",
+                        to_operator="王班长",
+                        mill_status_snapshot=m1.status,
+                        note="30 分钟后取粘度样复检",
+                    ),
+                    MillHandover(
+                        mill_id=m2.id,
+                        shift_date=now.date(),
+                        slot="morning",
+                        from_operator="李工",
+                        to_operator="张研磨",
+                        mill_status_snapshot=m2.status,
+                        note="待机待排产，料碗已清空",
+                    ),
+                    MillHandover(
+                        mill_id=m3.id,
+                        shift_date=(now - timedelta(days=1)).date(),
+                        slot="night",
+                        from_operator="王班长",
+                        to_operator="赵夜班",
+                        mill_status_snapshot=m3.status,
+                        note="换色清洗中，夜班继续",
                     ),
                 ]
             )

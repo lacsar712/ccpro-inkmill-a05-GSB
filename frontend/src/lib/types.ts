@@ -44,6 +44,19 @@ export interface GrindPass {
   operatorName: string;
 }
 
+export type HandoverSlot = 'morning' | 'afternoon' | 'night';
+
+export interface MillHandover {
+  id: number;
+  millId: number;
+  shiftDate: string;
+  slot: HandoverSlot;
+  fromOperator: string;
+  toOperator: string;
+  millStatusSnapshot: MillStatus;
+  note: string | null;
+}
+
 export interface DashboardStats {
   workshopTotal: number;
   grindingMillCount: number;

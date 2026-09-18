@@ -1,7 +1,7 @@
 # InkMill-01 · 油墨研磨台账
 
-面向印刷油墨研磨车间的**研磨机状态、粘度取样与研磨遍次**台账系统。  
-**不是**库存、电商或 CMS 场景。
+面向印刷油墨研磨车间的**研磨机状态、粘度取样、研磨遍次与交接班**台账系统。  
+**不是**库存、电商或 CMS 场景，也不是人事排班系统。
 
 ## 技术栈
 
@@ -34,7 +34,8 @@ MySQL 连接：`inkmill` / `inkmill` / `inkmill`（库名/用户/密码）
 2. **Mill**：`workshopId`, `millCode`（同车间唯一）, `pigmentBase`, `bowlLiters`, `status`（`grinding` \| `idle` \| `wash`）
 3. **ViscositySample**：`millId`, `sampledAt`, `viscosityPaS`（须 &gt; 0，否则 HTTP 400）, `tempC`, `notes`
 4. **GrindPass**：`millId`, `startedAt`, `passNo`（≥ 1）, `durationMin`（&gt; 0）, `mediaType`, `operatorName`
-5. **Dashboard**：`workshopTotal`, `grindingMillCount`, `samplesLast24h`, `passesLast7d`
+5. **MillHandover**：`millId`, `shiftDate`, `slot`（`morning` \| `afternoon` \| `night`）, `fromOperator`, `toOperator`, `millStatusSnapshot`（创建时自动写入机台当前 status，编辑不更新）, `note`；同机同日同班次唯一，列表支持 `?millId=` 与 `?date=` 过滤
+6. **Dashboard**：`workshopTotal`, `grindingMillCount`, `samplesLast24h`, `passesLast7d`
 
 ## 快速启动（Docker）
 
